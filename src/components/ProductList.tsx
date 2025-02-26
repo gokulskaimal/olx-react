@@ -6,6 +6,7 @@ interface Product {
   price: number;
   title: string;
   category: string;
+  createdAt: { seconds: number; nanoseconds: number }; // Assuming createdAt is a Firestore timestamp
 }
 
 interface ProductListProps {
@@ -14,6 +15,11 @@ interface ProductListProps {
 }
 
 const ProductList = ({ products, searches }: ProductListProps) => {
+  const formatDate = (timestamp: { seconds: number; nanoseconds: number }) => {
+    const date = new Date(timestamp.seconds * 1000);
+    return date.toLocaleDateString();
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 w-full">
@@ -25,10 +31,13 @@ const ProductList = ({ products, searches }: ProductListProps) => {
                 <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
                   <img src={data.image} className="object-contain h-full" alt="product image" />
                 </div>
-                <div className="p-4">
-                  <h1 className="font-bold text-xl mb-2">${data.price}</h1>
-                  <h1 className="text-lg font-medium">{data.title}</h1>
+                <div className="p-4 relative">
+                  <h1 className="font-bold text-xl mb-2">{data.title}</h1>
+                  <h1 className="text-lg font-medium">₹ {data.price}</h1>
                   <h1 className="text-gray-600">{data.category}</h1>
+                  <span className="absolute bottom-2 right-2 text-gray-500 text-sm">
+                    {formatDate(data.createdAt)}
+                  </span>
                 </div>
               </div>
             </Link>

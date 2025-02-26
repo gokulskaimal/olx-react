@@ -10,7 +10,7 @@ interface Product {
   price: number;
   title: string;
   category: string;
-  [key: string]: any;
+  createdAt: { seconds: number; nanoseconds: number }; // Assuming createdAt is a Firestore timestamp
 }
 
 interface HomeProps {
@@ -31,7 +31,7 @@ const Home = ({ search }: HomeProps) => {
         price: data.price,
         title: data.title,
         category: data.category,
-        ...data
+        createdAt: data.createdAt, // Ensure createdAt is included
       };
     });
     setProducts(productList);
